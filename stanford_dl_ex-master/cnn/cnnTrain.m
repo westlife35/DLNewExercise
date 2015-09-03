@@ -21,10 +21,10 @@ poolDim = 2;      % Pooling dimension, (should divide imageDim-filterDim+1)
 
 % Load MNIST Train
 addpath ../common/;
-images = loadMNISTImages('../common/train-images-idx3-ubyte');
+images = loadMNISTImages('../../common/train-images-idx3-ubyte');
 images = reshape(images,imageDim,imageDim,[]);
-labels = loadMNISTLabels('../common/train-labels-idx1-ubyte');
-labels(labels==0) = 10; % Remap 0 to 10
+labels = loadMNISTLabels('../../common/train-labels-idx1-ubyte');
+labels(labels==0) = 10; % Remap 0 to 10       note:make a remap rather than add one for all as before
 
 % Initialize Parameters
 theta = cnnInitParams(imageDim,filterDim,numFilters,poolDim,numClasses);

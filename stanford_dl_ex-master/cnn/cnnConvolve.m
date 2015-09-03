@@ -45,22 +45,33 @@ for imageNum = 1:numImages
     % Obtain the feature (filterDim x filterDim) needed during the convolution
 
     %%% YOUR CODE HERE %%%
+    filter = W(:,:,filterNum);
 
     % Flip the feature matrix because of the definition of convolution, as explained later
-    filter = rot90(squeeze(filter),2);
+    %filter = rot90(squeeze(filter),2);
+    filter = rot90(filter,2);% not necessary to use squeeze
       
     % Obtain the image
-    im = squeeze(images(:, :, imageNum));
+    %im = squeeze(images(:, :, imageNum));
+    im = images(:, :, imageNum);% not necessary to use squeeze
 
     % Convolve "filter" with "im", adding the result to convolvedImage
     % be sure to do a 'valid' convolution
 
     %%% YOUR CODE HERE %%%
+    convolvedImage =conv2(im, filter,'valid');%加上valid参数，下面代码不要了。 valid使得取出不补零的结果 
+    %conv2Dim = size(convolvedImage,1);  
+    %im_start = (conv2Dim - convDim+2)/2;  
+    %im_end = im_start+convDim-1;  
+    %convolvedImage = convolvedImage(im_start:im_end,im_start:im_end);%取中间部分
     
     % Add the bias unit
     % Then, apply the sigmoid function to get the hidden activation
 
     %%% YOUR CODE HERE %%%
+    convolvedImage = convolvedImage+b(filterNum);  
+    convolvedImage = sigmoid(convolvedImage);  
+    convolvedImage = reshape(convolvedImage,convDim, convDim, 1, 1);%2维变维4维 
 
     
     convolvedFeatures(:, :, filterNum, imageNum) = convolvedImage;

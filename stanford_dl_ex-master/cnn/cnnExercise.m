@@ -23,11 +23,13 @@ poolDim = 3;          % dimension of pooling region
 
 % Here we load MNIST training images
 addpath ../common/;
-images = loadMNISTImages('../common/train-images-idx3-ubyte');
+images = loadMNISTImages('../../common/train-images-idx3-ubyte');
 images = reshape(images,imageDim,imageDim,numImages);
 
 W = randn(filterDim,filterDim,numFilters);
-b = rand(numFilters);
+%b = rand(numFilters); % I change this code to the code below
+b = rand(numFilters,1);
+% b = rand(1,numFilters);
 
 %%======================================================================
 %% STEP 1: Implement and test convolution
@@ -58,7 +60,8 @@ for i = 1:1000
    
     patch = convImages(imageRow:imageRow + filterDim - 1, imageCol:imageCol + filterDim - 1, imageNum);
 
-    feature = sum(sum(patch.*W(:,:,filterNum)))+b(filterNum);
+%     feature = sum(sum(patch.*W(:,:,filterNum)))+b(filterNum);
+    feature = sum(sum(W(:,:,filterNum).*patch))+b(filterNum);
     feature = 1./(1+exp(-feature));
     
     if abs(feature - convolvedFeatures(imageRow, imageCol,filterNum, imageNum)) > 1e-9
