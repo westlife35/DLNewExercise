@@ -18,11 +18,13 @@ for l = 1 :numel(ei.layer_sizes)
     % Xaxier's scaling factor
     %s = sqrt(6) / sqrt(prev_size + cur_size);
     s = sqrt(6) / sqrt(prev_size + cur_size+1);
-    % good initialization
-    %stack{l}.W = rand(cur_size, prev_size)*2*s - s;
+    % good initialization test accuracy: 0.968600 train accuracy: 1.000000
+    % Elapsed time is 107.370475 seconds.   test accuracy: 0.972700 train
+    % accuracy: 1.000000 Elapsed time is 110.425341 seconds.
+    stack{l}.W = rand(cur_size, prev_size)*2*s - s;
     % bad initialization test accuracy: 0.113500 train accuracy: 0.112367 Elapsed time is 17.998085 seconds.
-    stack{l}.W = rand(cur_size, prev_size);
-    % bad initialization
-    stack{l}.W = randn(cur_size, prev_size);
+    %stack{l}.W = rand(cur_size, prev_size);
+    % good initialization test accuracy: 0.970800 train accuracy: 1.000000 Elapsed time is 155.449660 seconds.
+    %stack{l}.W = randn(cur_size, prev_size);
     stack{l}.b = zeros(cur_size, 1);
 end
