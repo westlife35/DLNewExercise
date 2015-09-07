@@ -21,7 +21,7 @@ Wc = 1e-1*randn(filterDim,filterDim,numFilters);
 
 outDim = imageDim - filterDim + 1; % dimension of convolved image
 
-% assume outDim is multiple of poolDim   问题 how the pooling works?
+% assume outDim is multiple of poolDim
 assert(mod(outDim,poolDim)==0,...
        'poolDim must divide imageDim - filterDim + 1');
 
@@ -29,7 +29,7 @@ outDim = outDim/poolDim;
 hiddenSize = outDim^2*numFilters;
 
 % we'll choose weights uniformly from the interval [-r, r]
-r  = sqrt(6) / sqrt(numClasses+hiddenSize+1); %问题 why there are +1 while in the multilayer-supervised not +1
+r  = sqrt(6) / sqrt(numClasses+hiddenSize+1); %问题 why there are +1 while in the multilayer-supervised not +1 -> the accuracy will not be influenced by +1, meaning add +1 or not the reslut is same.
 Wd = rand(numClasses, hiddenSize) * 2 * r - r;
 
 bc = zeros(numFilters, 1);
