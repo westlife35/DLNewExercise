@@ -26,8 +26,8 @@ options = struct('MaxIter', 100);
 
 
 % First, we initialize theta to some small random values.
-theta = rand(n,1)*0.001;
-%theta = zeros(n,1);
+%theta = rand(n,1)*0.001;
+theta = zeros(n,1);
 
 % Call minFunc with the logistic_regression.m file as the objective function.
 %

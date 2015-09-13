@@ -6,7 +6,7 @@
 %  You do not need to change the code below.
 
 addpath(genpath('../common'))
-x = loadMNISTImages('../common/train-images-idx3-ubyte');
+x = loadMNISTImages('../../common/train-images-idx3-ubyte');
 figure('name','Raw images');
 randsel = randi(size(x,2),200,1); % A random selection of samples for visualization
 display_network(x(:,randsel));
@@ -15,7 +15,9 @@ display_network(x(:,randsel));
 %% Step 0b: Zero-mean the data (by row)
 %  You can make use of the mean and repmat/bsxfun functions.
 
+
 %%% YOUR CODE HERE %%%
+x=x-repmat(mean(x,1),size(x,1),1);
 
 %%================================================================
 %% Step 1a: Implement PCA to obtain xRot
@@ -23,6 +25,10 @@ display_network(x(:,randsel));
 %  with respect to the eigenbasis of sigma, which is the matrix U.
 
 %%% YOUR CODE HERE %%%
+sigma = x * x' / size(x, 2);
+[U,S,V] = svd(sigma);
+xRot=U'*x;
+
 
 %%================================================================
 %% Step 1b: Check your implementation of PCA
@@ -34,11 +40,27 @@ display_network(x(:,randsel));
 %  diagonal (non-zero entries) against a blue background (zero entries).
 
 %%% YOUR CODE HERE %%%
+%covar = zeros(size(x, 1)); % You need to compute this
+covar=(1/size(x, 1))*(xRot)*(xRot');
 
 % Visualise the covariance matrix. You should see a line across the
 % diagonal against a blue background.
 figure('name','Visualisation of covariance matrix');
-imagesc(covar);
+% 加入下边的一点处理，使得稍微可以看出来点
+% for(i=1:size(covar,1))
+%     for(j=1:size(covar,2))
+%         if(i~=j) 
+%             covar(i,j)=0;
+%         end;
+%     end;
+% end;
+i=1:length(covar(:));
+    if(covar(i)<0) 
+        covar(i)=0;
+    end;
+image(covar)
+
+%imagesc(covar);
 
 %%================================================================
 %% Step 2: Find k, the number of components to retain
@@ -46,6 +68,15 @@ imagesc(covar);
 %  to retain at least 99% of the variance.
 
 %%% YOUR CODE HERE %%%
+% k = 0; % Set k accordingly
+ss = diag(S);
+% for k=1:m
+%    if sum(s(1:k))./sum(ss) < 0.99
+%        continue;
+% end
+%其中cumsum(ss)求出的是一个累积向量，也就是说ss向量值的累加值
+%并且(cumsum(ss)/sum(ss))<=0.99是一个向量，值为0或者1的向量，为1表示满足那个条件
+k = length(ss((cumsum(ss)/sum(ss))<=0.99));
 
 %%================================================================
 %% Step 3: Implement PCA with dimension reduction
@@ -62,6 +93,8 @@ imagesc(covar);
 %  correspond to dimensions with low variation.
 
 %%% YOUR CODE HERE %%%
+% xHat = zeros(size(x));  % You need to compute this
+xHat = U*[U(:,1:k)'*x;zeros(length(ss)-k,size(x, 2))];
 
 % Visualise the data, and compare it to the raw data
 % You should observe that the raw and processed data are of comparable quality.
@@ -80,6 +113,9 @@ display_network(x(:,randsel));
 
 epsilon = 1e-1; 
 %%% YOUR CODE HERE %%%
+xPCAWhite = diag(1./sqrt(diag(S)+epsilon))*U'*x;
+figure('name','PCA whitened images');
+display_network(xPCAWhite(:,randsel));
 
 %% Step 4b: Check your implementation of PCA whitening 
 %  Check your implementation of PCA whitening with and without regularisation. 
@@ -97,6 +133,7 @@ epsilon = 1e-1;
 %  becoming smaller.
 
 %%% YOUR CODE HERE %%%
+covar = (1/size(x,1))*(xPCAWhite)*xPCAWhite';
 
 % Visualise the covariance matrix. You should see a red line across the
 % diagonal against a blue background.
@@ -110,6 +147,7 @@ imagesc(covar);
 %  that whitening results in, among other things, enhanced edges.
 
 %%% YOUR CODE HERE %%%
+xZCAWhite = U*xPCAWhite;
 
 % Visualise the data, and compare it to the raw data.
 % You should observe that the whitened images have enhanced edges.

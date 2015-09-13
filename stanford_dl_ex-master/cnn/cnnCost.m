@@ -166,7 +166,7 @@ poolArea = poolDim*poolDim;
 for imageNum = 1:numImages  
     for filterNum = 1:numFilters  
         e = poolError(:, :, filterNum, imageNum);  
-        unpoolError(:, :, filterNum, imageNum) = kron(e, unpoolingFilter)./poolArea;  %这里为什么还要除以poolArea
+        unpoolError(:, :, filterNum, imageNum) = kron(e, unpoolingFilter)./poolArea;
     end  
 end  
   
